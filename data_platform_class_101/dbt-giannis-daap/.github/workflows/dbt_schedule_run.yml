@@ -1,0 +1,61 @@
+# Example cookiecutter DBT Scheduled action
+name: Deps, Seed, Run, Check, Test and Docs
+
+on:
+  push:
+    branches:
+      - main
+
+#  schedule:
+#  # runs every 30 minutes
+#  # https://crontab.guru <-- for generating CRON expression
+#  # - cron: "*/30 * * * *"
+env:
+  DBT_PROFILES_DIR: .
+  DBT_USER: ${{ secrets.DBT_PROD_USER }}
+  DBT_PASSWORD: ${{ secrets.DBT_PASSWORD }}
+  DBT_DATABASE: ${{ secrets.DBT_DATABASE }}
+  DBT_SNOWFLAKE_ACCOUNT: ${{ secrets.DBT_SNOWFLAKE_ACCOUNT }}
+  DBT_SNOWFLAKE_ROLE: ${{ secrets.DBT_SNOWFLAKE_ROLE }}
+  DBT_SNOWFLAKE_WAREHOUSE: ${{ secrets.DBT_SNOWFLAKE_WAREHOUSE }}
+
+
+jobs:
+  pre-commit:
+    name: Run pre-commit checks 🔬
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v3
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+          architecture: x64
+      - name: Install dependencies
+        run: make dev-deps
+      - name: Run pre-commit
+        run: make pre-commit args="--all-files"
+
+  dbt-build:
+    name: DBT Build
+    runs-on: ubuntu-latest
+    needs:
+      - pre-commit
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v2
+
+      - name: Setup
+        uses: actions/setup-python@v1
+          with:
+            python-version: "3.10.x"
+
+      - name: Install dependencies
+        run: make deps
+
+      - name: DBT seed
+        run: dbt seed --full-refresh
+
+      - name: DBT build
+        run: dbt build
