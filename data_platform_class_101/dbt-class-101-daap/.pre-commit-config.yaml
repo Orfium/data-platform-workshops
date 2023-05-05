@@ -1,0 +1,48 @@
+repos:
+  - repo: https://github.com/Yelp/detect-secrets.git
+    rev: v1.4.0
+    hooks:
+      - id: detect-secrets
+        args: [ '--baseline', '.secrets.baseline' ]
+        exclude: (config/settings/test.py|/static|.html|local|README.md|poetry.lock)
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4s.0
+    hooks:
+      - id: check-merge-conflict
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-json
+        files: \.(json)$
+      - id: check-toml
+        files: \.(toml)$
+      - id: check-yaml
+        files: \.(yaml)$
+
+  - repo: https://github.com/datacoves/pre-commit-dbt
+    rev: v2.0.0
+    hooks:
+    - id: dbt-compile
+    - id: dbt-docs-generate
+    - id: check-source-table-has-description
+    - id: check-script-semicolon
+    - id: check-script-has-no-table-name
+    - id: check-script-ref-and-source
+    - id: check-model-has-properties-file
+    - id: check-model-has-all-columns
+    - id: check-model-has-description
+      files: ^models/
+
+
+  - repo: https://github.com/sqlfluff/sqlfluff
+    rev: 1.4.2
+    hooks:
+      - id: sqlfluff-lint
+        # For dbt projects, this installs the dbt "extras".
+        # You will need to select the relevant dbt adapter for your dialect
+        # (https://docs.getdbt.com/docs/available-adapters):
+        additional_dependencies: ['sqlfluff-templater-dbt', 'dbt-snowflake']
+        files: ^models/
+      - id: sqlfluff-fix
+        additional_dependencies: ['sqlfluff-templater-dbt', 'dbt-snowflake']
+        files: ^models/
