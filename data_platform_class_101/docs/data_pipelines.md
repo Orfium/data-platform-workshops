@@ -1,12 +1,20 @@
 # Snowflake Data Pipeline
+ > Replace GIANNIS_DAAP references with your respective naming for your resources.
+
 ## Enable your programmatic users.
 ### Enable Production Programmatic User
 1. Go to [Orfium’s Snowflake Testing Account](https://stb70715.us-east-1.snowflakecomputing.com/oauth/authorize?client_id=3kwdvnjpUzxU6sqlkOoknyZ30jLvtA%3D%3D&display=popup&redirect_uri=https%3A%2F%2Fapps-api.c1.us-east-1.aws.app.snowflake.com%2Fcomplete-oauth%2Fsnowflake&response_type=code&scope=refresh_token&state=%7B%22browserUrl%22%3A%22https%3A%2F%2Fapp.snowflake.com%2Fus-east-1%2Fstb70715%2Fworksheets%22%2C%22csrf%22%3A%22a1c86c30%22%2C%22isSecondaryUser%22%3Afalse%2C%22oauthNonce%22%3A%2246K8jpNtDWO%22%2C%22url%22%3A%22https%3A%2F%2Fstb70715.us-east-1.snowflakecomputing.com%22%7D)
-2. Fill the username, which match your Data Product in lowercase and underscores. (e.g giannis_daap)
+2. Fill the username, which match your Data Product in lowercase and underscores. (e.g `giannis_daap`)
 3. Fill the default password `Snowfl@keT3mpPass12` 
 4. Change password with the new one. 
 
- > Replace GIANNIS_DAAP references with your respective naming for your resources.
+### Enable Dev Programmatic User
+1. Go to [Orfium’s Snowflake Testing Account](https://stb70715.us-east-1.snowflakecomputing.com/oauth/authorize?client_id=3kwdvnjpUzxU6sqlkOoknyZ30jLvtA%3D%3D&display=popup&redirect_uri=https%3A%2F%2Fapps-api.c1.us-east-1.aws.app.snowflake.com%2Fcomplete-oauth%2Fsnowflake&response_type=code&scope=refresh_token&state=%7B%22browserUrl%22%3A%22https%3A%2F%2Fapp.snowflake.com%2Fus-east-1%2Fstb70715%2Fworksheets%22%2C%22csrf%22%3A%22a1c86c30%22%2C%22isSecondaryUser%22%3Afalse%2C%22oauthNonce%22%3A%2246K8jpNtDWO%22%2C%22url%22%3A%22https%3A%2F%2Fstb70715.us-east-1.snowflakecomputing.com%22%7D)
+2. Fill the username, which match your Data Product in lowercase and underscores and the suffix `.dev` (e.g `giannis_daap.dev`).
+3. Fill the default password `Snowfl@keT3mpPass12` 
+4. Change password with the new one. 
+
+> Connect to Snowflake using the development user
 
 ## Create Stage 
 Create a Stage using an already existing storage integration called `STG_DATA_PLATFORM_101_WORKSHOP` with access on
@@ -50,7 +58,7 @@ COPY INTO DB_ORFIUM_STAGING_TESTING.GIANNIS_DAAP_RAW.ORDERS_NO_TRANSFORM
 FROM @DB_ORFIUM_STAGING_TESTING.GIANNIS_DAAP_RAW.ORDERS_STAGE/initial_orders.csv.gz
 FILE_FORMAT= (type='csv', skip_header=1);
 
-SELECT * FROM DB_ORFIUM_STAGING_TESTING.GIANNIS_DAAP_RAW.ORDERS limit 100;
+SELECT * FROM DB_ORFIUM_STAGING_TESTING.GIANNIS_DAAP_RAW.ORDERS_NO_TRANSFORM limit 100;
 ```
 
 Use `COPY INTO` command to populate the previously created table, **with** transformation
