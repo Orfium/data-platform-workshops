@@ -16,6 +16,5 @@ Create your Data Product by following the below steps.
 1. Create a new module under `workshop_data_platform_101/data_products/`, with a name format as`{email_prefix}_daap.py` 
 2. Follow the example under `workshop_data_platform_101/data_products/giannis_daap.py` [link](https://github.com/Orfium/sf-management-pulumi/blob/master/projects/orfium_testing/workshop_data_platform_101/data_products/giannis_daap.py)
 and replace all the references of `giannis` with your email prefix. 
-3. Add your data products roles resources under `workshop_data_platform_101/data_products/daap_roles.py` following the existing example.
 4. Run pre-commit for all files `pre-commit run --all-files`
 5. Open a new PR to `data-platform-101` 
