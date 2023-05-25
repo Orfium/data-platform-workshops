@@ -58,7 +58,7 @@ COPY INTO DB_ORFIUM_STAGING_TESTING.GIANNIS_DAAP_RAW.ORDERS_NO_TRANSFORM
 FROM @DB_ORFIUM_STAGING_TESTING.GIANNIS_DAAP_RAW.ORDERS_STAGE/initial_orders.csv.gz
 FILE_FORMAT= (type='csv', skip_header=1);
 
-SELECT * FROM DB_ORFIUM_STAGING_TESTING.GIANNIS_DAAP_RAW.ORDERS_NO_TRANSFORM limit 100;
+SELECT * FROM DB_ORFIUM_STAGING_TESTING.GIANNIS_DAAP_RAW.ORDERS_NO_TRANSFORM ORDER BY ORDER_DATE;
 ```
 
 Use `COPY INTO` command to populate the previously created table, **with** transformation
@@ -80,7 +80,7 @@ FROM
     PATTERN = 'year=2018/.*'
     FILE_FORMAT = (type = 'csv', skip_header = 1);
 
-SELECT * FROM DB_ORFIUM_STAGING_TESTING.GIANNIS_DAAP_RAW.ORDERS limit 100;
+SELECT * FROM DB_ORFIUM_STAGING_TESTING.GIANNIS_DAAP_RAW.ORDERS ORDER BY ORDER_YEAR, ORDER_MONTH;
 ```
 
 
@@ -99,10 +99,10 @@ AUTO_REFRESH = true;
 ```
 
 ### Monitor External Table
-Quering over the External Table to monitor the the returned values and their format.
+Querying over the External Table to monitor the the returned values and their format.
 ```sql
 SHOW EXTERNAL TABLES;
-SELECT value AS json_value from DB_ORFIUM_STAGING_TESTING.GIANNIS_DAAP_RAW.PAYMENTS limit 10;
+SELECT value AS json_value from DB_ORFIUM_STAGING_TESTING.GIANNIS_DAAP_RAW.PAYMENTS_NO_MAPPING limit 10;
 ```
 Transforming query to output a more structured format 
 ```sql

@@ -12,7 +12,7 @@ url = 's3://orfium-data-de-dev/workshop_data_platform_101/payments/';
 
 ### Clone table from staging into production
 ```sql
-CREATE TABLE DB_ORFIUM_TESTING.GIANNIS_DAAP_RAW.ORDERS CLONE DB_ORFIUM_STAGING_TESTING.GIANNIS_DAAP_RAW.ORDERS
+CREATE TRANSIENT TABLE DB_ORFIUM_TESTING.GIANNIS_DAAP_RAW.ORDERS CLONE DB_ORFIUM_STAGING_TESTING.GIANNIS_DAAP_RAW.ORDERS
 ```
 
 ### Setup the production password
@@ -24,6 +24,12 @@ Open to your `.env` file and add the `DBT_PASSWORD` and source the file again
 ### Run dbt seeds in production
 ```shell
 > dbt seed -t prod
+```
+
+### Create your External Table 
+By running this command it will automatically define and create the external tables in your sources.
+```shell
+dbt run-operation stage_external_sources -t prod
 ```
 
 ### Run dbt all models in production

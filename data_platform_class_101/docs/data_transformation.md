@@ -26,7 +26,6 @@ You will be prompted with a set of configuration parameters.
 * **target_snowflake_wh**: (Snowflake specific) The snowflake connection warehouse for all targets. For this workshop use the `default` value.
 * **target_postgres_host_prod**: (Postgres specific) The postgres host server from production target. For this workshop the omit it.
 * **target_postgres_host_dev**: (Postgres specific) The postgres host server from development target. For this workshop the omit it.
-* **target_postgres_host_dev**: (Postgres specific) The postgres host server from development target. For this workshop the omit it.
 
 * **run_git_init** A boolean value for instantiating a new github repository. For this workshop use `yes` selection.
 * **add_sqlfluff** A boolean value for adding sqlfluff linter configuration. For this workshop use `yes` selection.
@@ -50,6 +49,15 @@ or
 > pip install -r requirements_dev.txt
 ```
 
+#### Create a `.env` file
+Add the development user's password 
+```dotenv
+DBT_PASSWORD_PROD=
+DBT_PASSWORD_DEV=your_development_user_password
+DBT_TEST_ENV=Yes
+```
+
+
 ## Run DBT Pipeline in Staging
 ### Source the local environmental
 In order to make the variables in the `.env` variable identifiable to our working session,
@@ -65,6 +73,12 @@ we need to export them.
 ### Run your seeds
 ```shell
 > dbt seed -t dev
+```
+
+### Create your External Table 
+By running this command it will automatically define and create the external tables in your sources.
+```shell
+dbt run-operation stage_external_sources -t dev
 ```
 
 ### Run & Test your Table materialization
@@ -88,7 +102,7 @@ we need to export them.
 Go to Snowflake and open the worksheet with the production user, and set the worksheet to the `dev` role.
 We will add some more extra data in the `orders` table. 
 ```sql
-SELECT COUNT(*) FROM DB_ORFIUM_STAGING_TESTING.GIANNIS_DAAP_RAW.ORDERS
+SELECT COUNT(*) FROM DB_ORFIUM_STAGING_TESTING.GIANNIS_DAAP_RAW.ORDERS;
 
 COPY INTO DB_ORFIUM_STAGING_TESTING.GIANNIS_DAAP_RAW.ORDERS
 FROM
@@ -106,7 +120,7 @@ FROM
     PATTERN = 'year=2021/.*'
     FILE_FORMAT = (type = 'csv', skip_header = 1);
     
-SELECT COUNT(*) FROM DB_ORFIUM_STAGING_TESTING.GIANNIS_DAAP_RAW.ORDERS
+SELECT COUNT(*) FROM DB_ORFIUM_STAGING_TESTING.GIANNIS_DAAP_RAW.ORDERS;
 ```
 
 Then return to your dbt project and run the incremental materialization.
