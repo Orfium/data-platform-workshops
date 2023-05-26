@@ -1,6 +1,15 @@
-# Create & Setup DBT project
-## Setup
+# Setup and Run DBT Transformaitons
+In this section we will cover the:
+1. Setup of a DBT Project.
+2. Creating a Snowflake External Table using DBT external packages.
+3. Uploading a simple and plain CSV file to Snowflake using DBT seeds.
+4. Running scoped DBT model transformations.
+5. Running scoped DBT model tests.
 
+The goal of this section is to run in detail all of our pipelines in the development Database, a.k.a DB_ORFIUM_STAGING_TESTING
+and then uplaod it to the production Database, a.k.a DB_ORFIUM_TESTING
+
+## Setup
 ### orfium-dbt-cookiecutter
 Install the cookiecutter (if not installed already)
 ```shell
@@ -50,21 +59,31 @@ or
 ```
 
 #### Create a `.env` file
-Add the development user's password 
+Setup some required environment variables for your project.
+
+* For the `DBT_PASSWORD_PROD` you should specify the password of 
+your production programmatic user you enabled at [Enable Production Programmatic User](https://github.com/Orfium/data-platform-workshops/blob/master/data_platform_class_101/docs/step_2_data_pipelines.md#enable-production-programmatic-user).
+
+* For the `DBT_PASSWORD_DEV` ou should specify the password of 
+your production programmatic user you enabled at [Enable Development Programmatic User](https://github.com/Orfium/data-platform-workshops/blob/master/data_platform_class_101/docs/step_2_data_pipelines.md#enable-development-programmatic-user).
+
 ```dotenv
-DBT_PASSWORD_PROD=
-DBT_PASSWORD_DEV=your_development_user_password
+DBT_PASSWORD_PROD={your_production_user_password}
+DBT_PASSWORD_DEV={your_development_user_password}
 DBT_TEST_ENV=Yes
+DBT_PROFILE_DIR=.
 ```
 
-
-## Run DBT Pipeline in Staging
 ### Source the local environmental
 In order to make the variables in the `.env` variable identifiable to our working session,
 we need to export them.
 ```shell
 > export $(grep -v '^#' .env | xargs)
 ```
+
+## Run DBT Pipeline in Staging
+
+
 ### Install your packages
 ```shell
 > dbt deps
@@ -78,7 +97,7 @@ we need to export them.
 ### Create your External Table 
 By running this command it will automatically define and create the external tables in your sources.
 ```shell
-dbt run-operation stage_external_sources -t dev
+> dbt run-operation stage_external_sources -t dev
 ```
 
 ### Run & Test your Table materialization
@@ -99,8 +118,10 @@ dbt run-operation stage_external_sources -t dev
 ```
 
 ### Run your incremental Model with updated data
-Go to Snowflake and open the worksheet with the production user, and set the worksheet to the `dev` role.
-We will add some more extra data in the `orders` table. 
+>Go to Snowflake and open the worksheet  and set the worksheet to the `r_{email_prefix}_dev` role.
+
+In this step we will ingest some more data into the `{email_prefix}_daap_raw.orders` table, 
+in order to check if they will be added in the next run of the incremental model.
 ```sql
 SELECT COUNT(*) FROM DB_ORFIUM_STAGING_TESTING.GIANNIS_DAAP_RAW.ORDERS;
 
@@ -129,8 +150,73 @@ Then return to your dbt project and run the incremental materialization.
 > dbt test -t dev -s +t_orders_payments.sql
 ```
 
-### Run docs 
+### Run DBT docs
+This will generate the DBT documentation for your project and then serve it locally to a webserver.
+DBT documentation provide greate insights about the dependencies of your models, as also their configured characteristics.
 ```shell
-> dbt docs generate
+> dbt docs generate -t dev
 > dbt docs serve --port 8081
 ```
+
+## Run DBT Pipeline in Production.
+Login to snowflake using your `production` programmatic user. 
+This is the user that have been activated at step [Enable Production Programmatic User](https://github.com/Orfium/data-platform-workshops/blob/master/data_platform_class_101/docs/step_2_data_pipelines.md#enable-production-programmatic-user).
+
+### Create Stage in Production database
+```sql
+CREATE OR REPLACE STAGE DB_ORFIUM_TESTING.GIANNIS_DAAP_RAW.PAYMENTS_STAGE  
+STORAGE_INTEGRATION = STG_DATA_PLATFORM_101_WORKSHOP
+url = 's3://orfium-data-de-dev/workshop_data_platform_101/payments/';
+```
+
+### Clone table from staging into production
+```sql
+CREATE TRANSIENT TABLE DB_ORFIUM_TESTING.GIANNIS_DAAP_RAW.ORDERS CLONE DB_ORFIUM_STAGING_TESTING.GIANNIS_DAAP_RAW.ORDERS
+```
+
+### Run dbt seeds in production
+```shell
+> dbt seed -t prod
+```
+
+### Create your External Table 
+By running this command it will automatically define and create the external tables in your sources.
+```shell
+dbt run-operation stage_external_sources -t prod
+```
+
+### Run dbt all models in production
+```shell
+> dbt build -t prod
+```
+
+
+
+## Helpful References Links
+ * [What is DBT](https://docs.getdbt.com/docs/introduction)
+### DBT Configuration
+  * [General Configs and Properties](https://docs.getdbt.com/reference/configs-and-properties)
+  * [dbt_project.yml](https://docs.getdbt.com/reference/dbt_project.yml)
+  * [Snowflake Specific Configuration](https://docs.getdbt.com/reference/resource-configs/snowflake-configs)
+  * [Connection Profiles](https://docs.getdbt.com/docs/core/connection-profiles)
+### DBT Sources
+  * [Sources - How to use](https://docs.getdbt.com/docs/build/sources)
+  * [Sources Properties and configuration](https://docs.getdbt.com/reference/source-properties)
+### DBT Models
+  * [About DBT Models](https://docs.getdbt.com/docs/build/models)
+  * [Model properties and configuration](https://docs.getdbt.com/reference/model-properties)
+### DBT Tests
+  * [About Tests](https://docs.getdbt.com/docs/build/tests)
+  * [DBT Great Expectations](https://github.com/calogica/dbt-expectations)
+### DBT CLI
+  * [DBT CLI Basics](https://docs.getdbt.com/docs/running-a-dbt-project/run-your-dbt-projects)
+  * [DBT Model Selection Syntax](https://docs.getdbt.com/reference/node-selection/syntax)
+### DBT General
+  * [DBT Seeds - How to use](https://docs.getdbt.com/docs/build/seeds)
+  * [DBT Enviromental Variables](https://docs.getdbt.com/docs/build/environment-variables)
+  * [DBT Project Variables](https://docs.getdbt.com/docs/build/project-variables)
+  * [DBT FAQs](https://docs.getdbt.com/docs/faqs)
+### DBT Helpful Packages
+
+  * [DBT External Tables](https://github.com/dbt-labs/dbt-external-tables)
+  * [DBT Utils](https://github.com/dbt-labs/dbt-utils)
