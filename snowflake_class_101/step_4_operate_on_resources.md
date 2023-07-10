@@ -2,17 +2,21 @@
 
 ## Guidelines
 1. Create a new worksheet in Snowflake Portal.
-2. Replace all the SAMPLE references with your email prefix identifier. (e.g. giannis@orfium.com -> GIANNIS)3. 
-_To replace multiple matches on Snowflake worksheet use the 
+2. Replace all the SAMPLE references with your email prefix identifier. (e.g. giannis@orfium.com -> GIANNIS)
+3. _To replace multiple matches on Snowflake worksheet use the 
    1. CMD + SHIFT + H _ for Mac 
    2. CTRL + SHIFT + H _ for Windows or Linux
-3. Set your respective R_SAMPLE_MASTER as the workspaces active role from the top right tab.
-4. Set your respective WH_SAMPLE as the workspaces active warehouse from the top right tab.
+4. Set your respective R_SAMPLE_MASTER as the workspaces active role from the top right tab.
+5. Set your respective WH_SAMPLE as the workspaces active warehouse from the top right tab.
 
 ## Actions
-### Drop resources and roles 
+### Create a simple table transformation
 ```sql
--- CREATE TRANSFOMRATION TABLE
+-- USE YOUR MASTER ROLE
+USE ROLE R_SAMPLE_MASTER;
+USE WAREHOUSE WH_SAMPLE;
+
+-- CREATE TRANSFORMATION TABLE
 CREATE TABLE DB_DATA_PRODUCTS.SAMPLE.T_ORDERS AS (
     SELECT 
         O_ORDERKEY as ORDER_KEY,
@@ -73,8 +77,11 @@ DELETE FROM DB_DATA_PRODUCTS.SAMPLE.T_ORDERS_CLONE
 WHERE YEAR(ORDER_DATE) <= '1993';
 -- VALIDATE THE DELETIONS OPERATION
 SELECT count(*) FROM DB_DATA_PRODUCTS.SAMPLE.T_ORDERS_CLONE;
+```
 
--- CREATE TABLE FROM TIME TRAVEL QUERY TO RETRIEVE DELETED ROWS
+Practically you need to add the proper amount of seconds
+between the _creation_time_ and the _update_time_ of the T_ORDERS_CLONE table.
+```sql
 CREATE OR REPLACE TABLE DB_DATA_PRODUCTS.SAMPLE.T_ORDERS_RSRV AS
 (
     SELECT * FROM DB_DATA_PRODUCTS.SAMPLE.T_ORDERS_CLONE AT(OFFSET => -60)

@@ -2,12 +2,12 @@
 
 ## Guidelines
 1. Create a new worksheet in Snowflake Portal.
-2. Replace all the SAMPLE references with your email prefix identifier. (e.g. giannis@orfium.com -> GIANNIS)3. 
-_To replace multiple matches on Snowflake worksheet use the 
+2. Replace all the SAMPLE references with your email prefix identifier. (e.g. giannis@orfium.com -> GIANNIS)
+3. _To replace multiple matches on Snowflake worksheet use the 
    1. CMD + SHIFT + H _ for Mac 
    2. CTRL + SHIFT + H _ for Windows or Linux
-3. Set your respective R_SAMPLE_MASTER as the workspaces active role from the top right tab.
-4. Set your respective WH_SAMPLE as the workspaces active warehouse from the top right tab.
+4. Set your respective R_SAMPLE_MASTER as the workspaces active role from the top right tab.
+5. Set your respective WH_SAMPLE as the workspaces active warehouse from the top right tab.
 ## Actions
 ### 
 ```sql
@@ -15,8 +15,21 @@ USE ROLE R_SAMPLE_MASTER;
 USE WAREHOUSE WH_SAMPLE;
 ```
 
-### Data Loading into Existing Table
+### Monitor Storage Integration Configuration
 ```sql
+-- Monitor your Integration
+SHOW INTEGRATIONS;
+DESCRIBE INTEGRATION STG_GENERIC_WORKSHOP;
+```
+
+### COPY INTO Table (No-Transformation)
+```sql
+-- Create Stage with your bucket filepath definition.
+CREATE OR REPLACE STAGE DB_DATA_PRODUCTS.SAMPLE.SAMPLE_STAGE
+STORAGE_INTEGRATION = STG_GENERIC_WORKSHOP
+url = 's3://orfium-data-de-dev/workshop_daap_in_snowflake/tpch_sf10/';
+
+-- Create the table that will be ingested with your data from S3
 CREATE or REPLACE TRANSIENT TABLE DB_DATA_PRODUCTS.SAMPLE.LINEITEM (
 	L_ORDERKEY NUMBER(38,0),
 	L_PARTKEY NUMBER(38,0),
@@ -36,27 +49,28 @@ CREATE or REPLACE TRANSIENT TABLE DB_DATA_PRODUCTS.SAMPLE.LINEITEM (
 	L_COMMENT VARCHAR(44)
 );
 
+-- Use COPY INTO operation to load yhe data from a specific table 
 COPY INTO DB_DATA_PRODUCTS.SAMPLE.LINEITEM
 FROM @DB_DATA_PRODUCTS.SAMPLE.SAMPLE_STAGE/lineitem_10000.csv.gz
 FILE_FORMAT= (type='csv', skip_header=1);
 ```
 
 ### Create External Tables
-#### Crate External non-standardized table
+#### Create External non-standardized table
 ```sql
---  CREATING EXTERNAL TABLE
-
+-- Create Non-Standardized External Table
 CREATE OR REPLACE EXTERNAL TABLE DB_DATA_PRODUCTS.SAMPLE.ORDERS_NO_STD
 LOCATION=@DB_DATA_PRODUCTS.SAMPLE.SAMPLE_STAGE
 PATTERN = '.*orders.*'
 FILE_FORMAT = (type='csv', skip_header=1)
 AUTO_REFRESH = true;
 
-
 SELECT value AS json_value FROM DB_DATA_PRODUCTS.SAMPLE.ORDERS limit 100;
 ```
+
 #### Create External standardized table
 ```sql
+-- Create Standardized External Table
 CREATE OR REPLACE EXTERNAL TABLE DB_DATA_PRODUCTS.SAMPLE.ORDERS
 (
     O_ORDERKEY NUMBER(38,0) AS (value:c1::NUMBER(38,0)),
@@ -75,6 +89,6 @@ PATTERN = '.*orders.*'
 FILE_FORMAT = (type='csv', skip_header=1)
 AUTO_REFRESH = true;
 
-SELECT * FROM ```DB_DATA_PRODUCTS.SAMPLE.ORDERS limit 100;
+SELECT * FROM DB_DATA_PRODUCTS.SAMPLE.ORDERS limit 100;
 
 ```

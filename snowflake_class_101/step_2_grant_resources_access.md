@@ -2,11 +2,11 @@
 
 ## Guidelines
 1. Create a new worksheet in Snowflake Portal.
-2. Replace all the SAMPLE references with your email prefix identifier. (e.g. giannis@orfium.com -> GIANNIS)3. 
-_To replace multiple matches on Snowflake worksheet use the 
+2. Replace all the SAMPLE references with your email prefix identifier. (e.g. giannis@orfium.com -> GIANNIS)
+3. _To replace multiple matches on Snowflake worksheet use the 
    1. CMD + SHIFT + H _ for Mac 
    2. CTRL + SHIFT + H _ for Windows or Linux
-3. Set  SECURITYADMIN as the workspaces active role from the top right.
+4. Set  SECURITYADMIN as the workspaces active role from the top right.
 
 
 ## Actions
