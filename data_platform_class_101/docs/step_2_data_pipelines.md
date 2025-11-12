@@ -3,13 +3,13 @@
 
 ## Enable your programmatic users.
 ### Enable Production Programmatic User
-1. Go to [Orfium’s Snowflake Testing Account](https://stb70715.us-east-1.snowflakecomputing.com/oauth/authorize?client_id=3kwdvnjpUzxU6sqlkOoknyZ30jLvtA%3D%3D&display=popup&redirect_uri=https%3A%2F%2Fapps-api.c1.us-east-1.aws.app.snowflake.com%2Fcomplete-oauth%2Fsnowflake&response_type=code&scope=refresh_token&state=%7B%22browserUrl%22%3A%22https%3A%2F%2Fapp.snowflake.com%2Fus-east-1%2Fstb70715%2Fworksheets%22%2C%22csrf%22%3A%22a1c86c30%22%2C%22isSecondaryUser%22%3Afalse%2C%22oauthNonce%22%3A%2246K8jpNtDWO%22%2C%22url%22%3A%22https%3A%2F%2Fstb70715.us-east-1.snowflakecomputing.com%22%7D)
+1. Go to [Orfium’s Snowflake Testing Account](https://stb70715.us-east-1.snowflakecomputing.com/console/login)
 2. Fill the username, which match your Data Product in lowercase and underscores. (e.g `giannis_daap`)
 3. Fill the default password `Snowfl@keT3mpPass12` 
 4. Change password with the new one. 
 
 ### Enable Dev Programmatic User
-1. Go to [Orfium’s Snowflake Testing Account](https://stb70715.us-east-1.snowflakecomputing.com/oauth/authorize?client_id=3kwdvnjpUzxU6sqlkOoknyZ30jLvtA%3D%3D&display=popup&redirect_uri=https%3A%2F%2Fapps-api.c1.us-east-1.aws.app.snowflake.com%2Fcomplete-oauth%2Fsnowflake&response_type=code&scope=refresh_token&state=%7B%22browserUrl%22%3A%22https%3A%2F%2Fapp.snowflake.com%2Fus-east-1%2Fstb70715%2Fworksheets%22%2C%22csrf%22%3A%22a1c86c30%22%2C%22isSecondaryUser%22%3Afalse%2C%22oauthNonce%22%3A%2246K8jpNtDWO%22%2C%22url%22%3A%22https%3A%2F%2Fstb70715.us-east-1.snowflakecomputing.com%22%7D)
+1. Go to [Orfium’s Snowflake Testing Account](https://stb70715.us-east-1.snowflakecomputing.com/console/login)
 2. Fill the username, which match your Data Product in lowercase and underscores and the suffix `.dev` (e.g `giannis_daap.dev`).
 3. Fill the default password `Snowfl@keT3mpPass12` 
 4. Change password with the new one. 
