@@ -13,11 +13,11 @@ In case you are running this step **remotely**, you can use the workshop's defau
 ### Rebase or Reset your existing branch
 Reset or reset your working branch in `sf-management-pulumi` project.
 ```shell
-> git fetch && git rebase origin/data-platform-101
+git fetch && git rebase origin/data-platform-101
 ```
 or 
 ```shell
-> git fetch && git reset --hard origin/data-platform-101 
+git fetch && git reset --hard origin/data-platform-101 
 ```
 
 ## Expose your files to a consumer Data Product
@@ -50,7 +50,7 @@ from workshop_data_platform_101.data_products import (
 #### Access for {email_prefix} DaaP - R_{email_prefix}_RO ####
 
 {email_prefix}_daap_ro_access = access_data_product(
-    granter_dp={email_prefix}_daap.data_product_giannis,
+    granter_dp={email_prefix}_daap.data_product_{email_prefix},
     grantee_dps=[
         # Add the grantee data products here.
         {partner_email_prefix}_daap.data_product_{partner_email_prefix},
@@ -61,7 +61,7 @@ from workshop_data_platform_101.data_products import (
 ```
 
 ### 3. Access default Data Product (In case of running remotely)
-1. Go to the `projects/orfium_testing/workshop_data_platform_101/data_products_access/giannis_daap_access.yml`
+1. Go to the `projects/orfium_testing/workshop_data_platform_101/data_products_access/giannis_daap_access.py`
 2. Import your data product module.
 ```python
 from workshop_data_platform_101.data_products import (
@@ -85,7 +85,7 @@ giannis_daap_ro_access = access_data_product(
 ### 4. Open new Pull Request
 * Run pre-commit for all files.
 ```sh
-> pre-commit run --all-files
+pre-commit run --all-files
 ```
 * Open a new PR to `data-platform-101`
 
