@@ -11,9 +11,9 @@ and then uplaod it to the production Database, a.k.a DB_ORFIUM_TESTING
 
 ## Setup
 ### orfium-dbt-cookiecutter
-Install the cookiecutter (if not installed already)
+Install the [cookiecutter](https://cookiecutter.readthedocs.io/en/latest/installation.html#install-cookiecutter) (if not installed already):
 ```shell
-> brew install cookiecutter
+> pip install cookiecutter
 ```
 If you have not created your DBT project yet open your terminal and create your project using
 ```shell
@@ -41,16 +41,10 @@ You will be prompted with a set of configuration parameters.
 * **add_example_project** A boolean value for adding a sample project with example use case on DBT's basic concepts. For this workshop use `yes` selection.
 
 #### Create a new virtual environment
-Create a new virtual environment for your local python version, >=3.8 (using uv or pyenv or virtualenv)
+Create a new virtual environment for your local python version, >=3.11 (using uv)
 ```shell
-> uv venv dbt-data-platform-workshop --python 3.11.1
+> uv venv dbt-data-platform-workshop --python 3.11
 > source dbt-data-platform-workshop/bin/activate
-or
-> pyenv virtualenv 3.11.1 dbt-data-platform-workshop
-> pyenv activate dbt-data-platform-workshop
-or
-> virtualenv dbt-data-platform-workshop
-> source dbt-data-platform-workshop/bin/activate 
 ```
 
 #### Install dependencies
