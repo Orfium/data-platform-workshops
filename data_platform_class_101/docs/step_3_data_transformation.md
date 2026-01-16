@@ -11,7 +11,7 @@ and then uplaod it to the production Database, a.k.a DB_ORFIUM_TESTING
 
 ## Setup
 ### orfium-dbt-cookiecutter
-Install the [cookiecutter](https://cookiecutter.readthedocs.io/en/latest/installation.html#install-cookiecutter) (if not installed already):
+Install [cookiecutter](https://cookiecutter.readthedocs.io/en/latest/installation.html#install-cookiecutter) (if not installed already):
 ```shell
 > pip install cookiecutter
 ```
