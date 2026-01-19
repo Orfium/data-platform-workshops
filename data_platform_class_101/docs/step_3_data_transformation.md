@@ -11,7 +11,7 @@ and then uplaod it to the production Database, a.k.a DB_ORFIUM_TESTING
 
 ## Setup
 ### orfium-dbt-cookiecutter
-Install the cookiecutter (if not installed already)
+Install [cookiecutter](https://cookiecutter.readthedocs.io/en/latest/installation.html#install-cookiecutter) (if not installed already):
 ```shell
 > pip install cookiecutter
 ```
@@ -26,7 +26,7 @@ You will be prompted with a set of configuration parameters.
 * **default_target_ci** The name of the default target for the Github Action. You can choose between prod or dev. Default is prod.
 * **target_database_prod** : The name of the default database for production target. For this workshop use `db_orfium_testing`.
 * **target_database_dev**: The name of the default database for development target. For this workshop use `db_orfium_staging_testing`.
-* **target_schema**: The name of the default target schema for all targets. For this workshop use your exposing schema name (e.g `giannsis_daap`)
+* **target_schema**: The name of the default target schema for all targets. For this workshop use your exposing schema name (e.g `giannis_daap`)
 * **target_user_prod**: The username for the production target. For this workshop use the production user that you enabled in the previous step (e.g `giannis_daap`)
 * **target_user_dev**: The username for the dev target. For this workshop use the production user that you enabled in the previous step (e.g `giannis_daap.dev`)
 * **target_snowflake_account**: The snowflake account for all targets. For this workshop use `stb70715.us-east-1`  which is the testing account.
@@ -41,19 +41,17 @@ You will be prompted with a set of configuration parameters.
 * **add_example_project** A boolean value for adding a sample project with example use case on DBT's basic concepts. For this workshop use `yes` selection.
 
 #### Create a new virtual environment
-Create a new virtual environment for your local python version, >=3.8 (using pyenv or virtualenv)
+Create a new virtual environment for your local python version, >=3.11 (using uv)
 ```shell
-> pyenv virtualenv 3.11.1 dbt-data-platform-workshop
-> pyenv activate dbt-data-platform-workshop
-
-or
-
-> virtualenv dbt-data-platform-workshop
-> source dbt-data-platform-workshop/bin/activate 
+> uv venv dbt-data-platform-workshop --python 3.11
+> source dbt-data-platform-workshop/bin/activate
 ```
 
 #### Install dependencies
 ```shell
+> uv pip install -r requirements.txt
+> uv pip install -r requirements_dev.txt
+or if not using uv
 > pip install -r requirements.txt
 > pip install -r requirements_dev.txt
 ```
